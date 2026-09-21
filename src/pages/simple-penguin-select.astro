@@ -1,0 +1,43 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout>
+  <h1>Simple Penguin avec sélection</h1>
+
+  <a href="/">Retour au sommaire</a>
+
+  <p>
+    <label for="species">Espèce :</label>
+
+    <select name="species" id="species">
+      <option value="">All species</option>
+      <option value="Adelie">Adelie</option>
+      <option value="Chinstrap">Chinstrap</option>
+      <option value="Gentoo">Gentoo</option>
+    </select>
+  </p>
+
+  <div id="myplot"></div>
+
+  <script>
+    import * as Plot from "@observablehq/plot";
+    import penguins from "../assets/penguins.json";
+
+    const plot = Plot.plot({
+      marks: [
+        Plot.dot(penguins, {
+          x: "culmen_length_mm",
+          y: "culmen_depth_mm",
+          stroke: "species",
+        }),
+      ],
+    });
+
+    const div = document.querySelector("#myplot");
+
+    if (div) {
+      div.append(plot);
+    }
+  </script>
+</Layout>
