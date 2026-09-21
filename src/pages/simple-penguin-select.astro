@@ -20,13 +20,27 @@ import Layout from "../layouts/Layout.astro";
 
   <div id="myplot"></div>
 
-  <script>
-    import * as Plot from "@observablehq/plot";
-    import penguins from "../assets/penguins.json";
+<script>
+  import * as Plot from "@observablehq/plot";
+  import penguins from "../assets/penguins.json";
+
+  const selectSpecies = document.querySelector("#species") as HTMLSelectElement;
+
+  const div = document.querySelector("#myplot") as HTMLDivElement;
+
+  function renderPlot() {
+    const species = selectSpecies.value;
+
+    div.innerHTML = "";
+
+    const filteredPenguins =
+      species === ""
+        ? penguins
+        : penguins.filter((penguin) => penguin.species === species);
 
     const plot = Plot.plot({
       marks: [
-        Plot.dot(penguins, {
+        Plot.dot(filteredPenguins, {
           x: "culmen_length_mm",
           y: "culmen_depth_mm",
           stroke: "species",
@@ -34,10 +48,11 @@ import Layout from "../layouts/Layout.astro";
       ],
     });
 
-    const div = document.querySelector("#myplot");
+    div.append(plot);
+  }
 
-    if (div) {
-      div.append(plot);
-    }
-  </script>
+  selectSpecies.addEventListener("change", renderPlot);
+
+  renderPlot();
+</script>
 </Layout>
